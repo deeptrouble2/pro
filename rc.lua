@@ -11,7 +11,7 @@ local cyclefocus = require('cyclefocus')
 
 -- | Theme | --
 
-local theme = "pro-dark"
+local theme = "pro-medium-dark"
 
 beautiful.init(os.getenv("HOME") .. "/.config/awesome/themes/" .. theme .. "/theme.lua")
 
@@ -56,7 +56,7 @@ local exec   = function (s) oldspawn(s, false) end
 local shexec = awful.util.spawn_with_shell
 
 modkey        = "Mod4"
-terminal      = "termite"
+terminal      = "urxvt"
 tmux          = "termite -e tmux"
 termax        = "termite --geometry 1680x1034+0+22"
 rootterm      = "sudo -i termite"
@@ -64,15 +64,20 @@ browser       = "firefox"
 filemanager   = "spacefm"
 configuration = termax .. ' -e "vim -O $HOME/.config/awesome/rc.lua $HOME/.config/awesome/themes/' ..theme.. '/theme.lua"'
 
+lain.layout.termfair.nmaster = 3
+lain.layout.termfair.ncol = 1
+
 -- | Table of layouts | --
 
 local layouts =
 {
     awful.layout.suit.floating,
+    lain.layout.termfair,
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top
+    awful.layout.suit.tile.top,
+    awful.layout.suit.fair
 }
 
 -- | Wallpaper | --
@@ -271,7 +276,7 @@ fswidget:set_bgimage(beautiful.widget_display)
 
 net_widgetdl = wibox.widget.textbox()
 net_widgetul = lain.widgets.net({
-    iface = "eth0",
+    iface = "eth1",
     settings = function()
         widget:set_markup(markup.font("Tamsyn 1", "  ") .. net_now.sent)
         net_widgetdl:set_markup(markup.font("Tamsyn 1", " ") .. net_now.received .. markup.font("Tamsyn 1", " "))
@@ -389,10 +394,11 @@ for s = 1, screen.count() do
     left_layout:add(spr5px)
 
     local right_layout = wibox.layout.fixed.horizontal()
+
+    right_layout:add(spr)
+    right_layout:add(spr5px)
+    right_layout:add(mypromptbox[s])
     if s == 1 then
-        right_layout:add(spr)
-        right_layout:add(spr5px)
-        right_layout:add(mypromptbox[s])
         right_layout:add(wibox.widget.systray())
         right_layout:add(spr5px)
     end
@@ -492,6 +498,8 @@ root.buttons(awful.util.table.join(
 globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "w",      function () mainmenu:show() end),
+    awful.key({ modkey,           }, "h",       awful.tag.viewprev       ), 
+    awful.key({ modkey,           }, "l",       awful.tag.viewnext       ),  
     awful.key({ modkey            }, "r",      function () mypromptbox[mouse.screen]:run() end),
     awful.key({ modkey,           }, "j",
         function ()
@@ -503,6 +511,13 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
+    -- Layout manipulation
+    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
+    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
+    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
+    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
+ 
     -- awful.key({ modkey,           }, "Tab",
     --     function ()
     --         awful.client.focus.history.previous()
@@ -552,10 +567,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "KP_Begin", function (c) c:geometry( { width = ww, height = wh, x = 0, y = ph } ) end),
     awful.key({ modkey,           }, "f",        function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey,           }, "c",        function (c) c:kill() end),
-    awful.key({ modkey,           }, "n",
-        function (c)
-            c.minimized = true
-        end),
+    awful.key({ modkey,           }, "n", function () awful.screen.focus_relative( 1) end),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
@@ -624,7 +636,7 @@ awful.rules.rules = {
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
-                     -- size_hints_honor = false,
+                     size_hints_honor = false,
                      raise = true,
                      keys = clientkeys,
                      buttons = clientbuttons } },
@@ -653,7 +665,7 @@ client.connect_signal("manage", function (c, startup)
         end
     end
 
-    local titlebars_enabled = false
+    local titlebars_enabled = true
     if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
         local buttons = awful.util.table.join(
                 awful.button({ }, 1, function()
@@ -713,4 +725,4 @@ end
 -- os.execute("pkill compton")
 -- run_once("compton")
 -- run_once("parcellite")
-
+os.execute("xset r rate 220 80")

@@ -11,7 +11,7 @@
 
 theme            = {}
 theme.icons      = os.getenv("HOME") .. "/.config/awesome/themes/pro-medium-dark/icons/"
-theme.wallpaper  = os.getenv("HOME") .. "/.config/awesome/themes/pro-medium-dark/wallpapers/pro-medium-dark-shadow.png"
+theme.wallpaper  = os.getenv("HOME") .. "/.config/awesome/themes/pro-medium-dark/wallpapers/minwall3.jpg"
 theme.panel      = "png:" .. theme.icons .. "/panel/panel.png"
 theme.font       = "Terminus 9"
 
@@ -28,9 +28,9 @@ theme.clockgf    = "#d5d5c3"
 
 -- | Borders | --
 
-theme.border_width  = 0
-theme.border_normal = "#000000"
-theme.border_focus  = "#000000"
+theme.border_width  = 1
+theme.border_normal = "#444444"
+theme.border_focus  = "#888888"
 theme.border_marked = "#000000"
 
 -- | Menu | --

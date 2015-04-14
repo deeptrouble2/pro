@@ -26,9 +26,9 @@ theme.clockgf    = "#d5d5c3"
 
 -- | Borders | --
 
-theme.border_width  = 0
+theme.border_width  = 1
 theme.border_normal = "#000000"
-theme.border_focus  = "#000000"
+theme.border_focus  = "#777777"
 theme.border_marked = "#000000"
 
 -- | Menu | --
