@@ -158,19 +158,19 @@ mpd_sepr:set_image(beautiful.mpd_sepr)
 
 mpdwidget = lain.widgets.mpd({
     settings = function ()
-        if mpd_now.state == "play" then
+        if mpd_now.state == "Playing" then
             mpd_now.artist = mpd_now.artist:upper():gsub("&.-;", string.lower)
             mpd_now.title = mpd_now.title:upper():gsub("&.-;", string.lower)
             widget:set_markup(markup.font("Tamsyn 3", " ")
                               .. markup.font("Tamsyn 7",
-                              mpd_now.artist
-                              .. " - " ..
+                              mpd_now.album
+                              .. " - " .. 
                               mpd_now.title
                               .. markup.font("Tamsyn 2", " ")))
             play_pause_icon:set_image(beautiful.mpd_pause)
             mpd_sepl:set_image(beautiful.mpd_sepl)
             mpd_sepr:set_image(beautiful.mpd_sepr)
-        elseif mpd_now.state == "pause" then
+        elseif mpd_now.state == "Paused" then
             widget:set_markup(markup.font("Tamsyn 4", "") ..
                               markup.font("Tamsyn 7", "MPD PAUSED") ..
                               markup.font("Tamsyn 10", ""))
@@ -193,23 +193,23 @@ musicwidget:buttons(awful.util.table.join(awful.button({ }, 1,
 function () awful.util.spawn_with_shell(ncmpcpp) end)))
 prev_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
-    awful.util.spawn_with_shell("mpc prev || ncmpcpp prev")
+    awful.util.spawn_with_shell("mpc prev || ncmpcpp prev || nuvolaplayer-client prev")
     mpdwidget.update()
 end)))
 next_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
-    awful.util.spawn_with_shell("mpc next || ncmpcpp next")
+    awful.util.spawn_with_shell("mpc next || ncmpcpp next || nuvolaplayer-client next")
     mpdwidget.update()
 end)))
 stop_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
     play_pause_icon:set_image(beautiful.play)
-    awful.util.spawn_with_shell("mpc stop || ncmpcpp stop")
+    awful.util.spawn_with_shell("mpc stop || ncmpcpp stop || nuvolaplayer-client stop")
     mpdwidget.update()
 end)))
 play_pause_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
-    awful.util.spawn_with_shell("mpc toggle || ncmpcpp toggle")
+    awful.util.spawn_with_shell("mpc toggle || ncmpcpp toggle || nuvolaplayer-client toggle")
     mpdwidget.update()
 end)))
 
